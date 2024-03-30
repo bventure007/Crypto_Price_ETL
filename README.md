@@ -26,7 +26,7 @@ Before running the script, ensure you have the following:
   ```
   pip install -r requirements.txt
   ```
-or 
+or import the below libraries
 
 # import libraries
 from util import get_redshift_connection,\
@@ -41,20 +41,8 @@ import psycopg2
 import ast
 from dotenv import dotenv_values
 
-# import libraries
-from util import get_redshift_connection,\
-execute_sql, list_files_in_folder
-import pandas as pd
-import requests
-import boto3
-from datetime import datetime
-from io import StringIO
-import io
-import psycopg2
-import ast
-from dotenv import dotenv_values
+
 ## Usage
-
 
 By default, the script will perform the following steps:
 - Extract cryptocurrency price data from rapid api.
