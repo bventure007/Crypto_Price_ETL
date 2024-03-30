@@ -67,6 +67,19 @@ def list_files_in_folder(bucket_name, folder):
     return files_list
 
 
+# Transform the data
+def transform_data(data):
+    data['price'] = data['price'].apply(lambda x: float(x)) # convert string column to float value
+    data['date'] = datetime.now().strftime('%Y-%m-%d %H:%M') # Add a date column
+    data['date'] = pd.to_datetime(data['date'], format ='%Y-%m-%d %H:%M')
+    data = data[['date', 'symbol', 'name', 'price', 'rank', 'btcPrice', 'lowVolume']]
+    return data
+
+def empty_raw_folder(bucket_name, raw_data_folder):
+    file_paths = list_files_in_folder(bucket_name, raw_data_folder)
+    for file_path in file_paths:
+        s3_resource.Object(bucket_name, file_path).delete()
+    print("Files deleted from raw data folder")
 
 
 
