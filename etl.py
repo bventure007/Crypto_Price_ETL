@@ -33,11 +33,11 @@ def get_data_from_api():
     crypto_price_data = pd.DataFrame(coin_data)[columns]
     return crypto_price_data
 
-# data = get_data_from_api()
+data = get_data_from_api()
 # print(data.head(20))
 
 
-# Write data to S3 Bucket
+#Write data to S3 Bucket
 def write_to_s3(data, bucket_name, folder):
     file_name = f"crypto_price_data_{datetime.now().strftime('%Y%m%d')}.csv" # Create a file name
     csv_buffer = StringIO() # Create a string buffer to collect csv string
@@ -47,4 +47,18 @@ def write_to_s3(data, bucket_name, folder):
     s3_client.put_object(Bucket=bucket_name, Key=f'{folder}/{file_name}', Body=csv_str ) 
     
 
+
+
+
+
+
+
+def read_multi_files_from_s3(bucket_name, prefix):
+    objects_list = s3_client.list_objects(Bucket = bucket_name, Prefix = prefix) # List the objects in the bucket
+    files = objects_list.get('Contents')
+    keys = [file.get('Key') for file in files][1:]
+    objs = [s3_client.get_object(Bucket = bucket_name, Key= key) for key in keys]
+    dfs = [pd.read_csv(io.BytesIO(obj['Body'].read())) for obj in objs]
+    data = pd.concat(dfs)
+    return data
 
